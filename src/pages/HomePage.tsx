@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import styled from "styled-components";
 
@@ -11,29 +11,72 @@ import * as Interpreter from '../utils/Interpreter';
 
 export default function HomePage () {
   const [code, setCode] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [isError, setIsError] = useState<Boolean>(false);
-  const { getInput, setOutput } = useContext(ConsoleContext);
+  const [isRunning, setIsRunning] = useState<Boolean>(false);
+  const { consoleOutput, isInput, getInput, setOutput } = useContext(ConsoleContext);
   const { variables, appendVariables, clearVariables } = useContext(VariablesContext);
   
+  useEffect(() => {
+    const hasInput = !!Number(localStorage.getItem('hasInput'));
+    const inputLine = !!Number(localStorage.getItem('inputLine'));
+
+    if (!isInput && !hasInput && inputLine) {
+      onRun();
+      setIsRunning(false);
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInput])
+
+  useEffect(() => {
+    localStorage.setItem('hasInput', '1');
+    localStorage.setItem('inputLine', '0');
+    localStorage.setItem('blockFlag', '0');
+    consoleOutput.output = '';
+    setIsRunning(false);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code])
+
   function onChange(newValue: string) {
     setCode(newValue);
   }
 
   async function onRun() {
-    setIsLoading(true);
-    clearVariables();
+    setIsError(false);
+    const hasInput = !!Number(localStorage.getItem('hasInput'));
+    const inputLine = Number(localStorage.getItem('inputLine'));
+    let codeToExecute = code.split('\n').slice(inputLine-1);
+
+    if (hasInput) {
+      setIsRunning(true);
+      await clearVariables();
+
+      consoleOutput.output = '';
+    }
 
     const terminal = await Interpreter.executeProgram(
-      code.split('\n'),
+      hasInput ? code.split('\n') : codeToExecute,
       variables,
       appendVariables,
       setOutput,
+      isInput,
+      getInput,
+      consoleOutput.output,
     );
 
-    setIsError(terminal.status);
-    setOutput(terminal.output);
-    setIsLoading(false);
+    if (terminal.output !== 'INPUT') {
+      setIsError(terminal.status);
+      if (terminal.status) {
+        await clearVariables();
+        await setOutput(terminal.output); //if error
+        setIsRunning(false);
+      }
+    }
+    
+    if (!hasInput) {
+      setIsRunning(false);
+    }
   }
 
   const displayVariables = variables.map((variable, index) => {
@@ -49,13 +92,17 @@ export default function HomePage () {
   return (
     <StyledContainer fluid>
       <StyledRow className="mr-0 ml-0">
-        <Header onRun={onRun} />
+        <Header isRunning={isRunning} onRun={() => {
+          localStorage.setItem('hasInput', '1');
+          localStorage.setItem('inputLine', '0');
+          localStorage.setItem('blockFlag', '0');
+          onRun();
+        }} />
         <StyledCol md={6} sm={12} >
           <Editor value={code} onChange={onChange} />
         </StyledCol>
         <StyledCol md={6} sm={12} >
           <Console
-            isLoading={isLoading}
             status={isError}
           />
         </StyledCol>

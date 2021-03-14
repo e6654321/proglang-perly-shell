@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import AceEditor from "react-ace";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import { ConsoleContext } from '../../contexts/ConsoleContext';
 import { inputRegEx } from '../../constants/RegEx';
@@ -16,33 +16,49 @@ type Props = {
 
 export default function Console(props: Props) {
   const { isLoading, status } = props;
+  const [value, setValue] = useState<string>('');
   const refEditor = useRef<AceEditor>(null);
-  const [value, setValue] = useState('');
-  const { consoleOutput, isInput, setIsInput } = useContext(ConsoleContext);
+  const { consoleInput, consoleOutput, isInput, setInput, setIsInput } = useContext(ConsoleContext);
   const placeholder = isLoading ? 'Running program...' : 'CFPL Interpreter (2021)\nPerly Shell Team';
 
-  function handleKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (isInput && setIsInput) {
+  async function handleKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (isInput) {
       const charCode = event.key;
-      let newValue = value;
+      let newValue = consoleInput;
 
       if (charCode === 'Backspace') {
-        newValue = value.slice(0, -1);
+        newValue = consoleInput.slice(0, -1);
       } else if (charCode === 'Enter') {
-        newValue = value + '\n';
+        localStorage.setItem('hasInput', '0');
 
-        setIsInput(false);
-        setValue(newValue);
+        await setIsInput(false);
+        consoleOutput.output+=consoleInput+'\n';
+
+        return;
       } else if (checkKeyIfSpecialCharacter(charCode)){
-        newValue = value;
+        newValue = consoleInput;
+      } else if (event.code === 'Space'){
+        newValue = consoleInput + ' ';
       } else if (inputRegEx.test(charCode)) {
-        newValue = value + charCode;
+        newValue = consoleInput + charCode;
       }
 
-      (refEditor as any)?.current.editor.gotoLine((value.match(/\n/g) || []).length+1);
-      (refEditor as any)?.current.editor.navigateLineEnd();
+      await setInput(newValue);
+      (refEditor as any)?.current.editor.gotoLine((newValue.match(/\n/g) || []).length+1);
     }
+    
+    (refEditor as any)?.current.editor.navigateLineEnd();
   }
+
+  useEffect(() => {
+    setValue(consoleOutput.output);
+  }, [consoleOutput])
+
+  useEffect(() => {
+    setValue(consoleOutput.output+consoleInput);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [consoleInput])
 
   return(
     <Wrapper onKeyDown={handleKeyPress}>
@@ -63,7 +79,7 @@ export default function Console(props: Props) {
         showPrintMargin={true}
         status={status}
         theme="terminal"
-        value={consoleOutput}
+        value={value}
       />
     </Wrapper>
   );

@@ -17,11 +17,11 @@ export default function checkCompleteBlock(statement: string): ExecuteOutput {
 
 
     if(statement === "START" && flag === 1){ 
-        localStorage.setItem('blockFlag', '3'); //sets the flag to 3 to indicate that start is already implemented
+        flag = 3; //sets the flag to 3 to indicate that start is already implemented
     }
 
     else if(statement === "START" && flag===0){
-        localStorage.setItem('blockFlag', '1'); //sets the flag to 1 that start is first seen in the code
+        flag = 1; //sets the flag to 1 that start is first seen in the code
     }
 
     if(statement === "STOP" && flag === 0){
@@ -41,10 +41,9 @@ export default function checkCompleteBlock(statement: string): ExecuteOutput {
     }
 
     if(statement === "STOP" && flag === 1){
-        localStorage.setItem('blockFlag', '2'); //full block with start and stop
+        flag=2;  //full block with start and stop
     }
 
-
-
+    localStorage.setItem('blockFlag', flag.toString());
     return output;
 }

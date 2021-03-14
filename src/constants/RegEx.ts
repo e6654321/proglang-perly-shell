@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 export const intRegEx = new RegExp(/^[-+]?\d+$/);
 
-export const charRegEx = new RegExp(/^('\w*'|".+")$/);
+export const charRegEx = new RegExp(/^('(.*?)'|"(.*?)")$/);
 
 export const floatRegEx = new RegExp(/[+-]?([0-9]*[.])?[0-9]+/);
 

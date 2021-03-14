@@ -4,18 +4,19 @@ import styled from "styled-components";
 
 type Props = {
   onRun?: (value: string) => void;
+  isRunning?: Boolean
 };
 
 export default function Header(props: Props) {
-  const { onRun } = props;
-
+  const { onRun, isRunning } = props;
+  const buttonDisplay = isRunning ? 'Running...' : 'Run';
 
   return(
     <Wrapper>
       <Text className="mx-auto">CIT’s First Programming Language (CFPL)</Text>
       <Row className="mr-0 ml-0">
         <Col md={6} sm={12}>
-          <StyledButton onClick={onRun}>Run</StyledButton>
+          <StyledButton onClick={onRun} disabled={isRunning}>{buttonDisplay}</StyledButton>
         </Col>
       </Row>
     </Wrapper>
