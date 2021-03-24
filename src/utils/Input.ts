@@ -54,6 +54,7 @@ export default function inputValue(
                     output.output = INPUT_INVALID;
                     output.status = true;
                     console.log("Integer error");
+                    i++;
                     flag = 1;
                   }
                 }
@@ -67,6 +68,7 @@ export default function inputValue(
                     output.output = INPUT_INVALID;
                     output.status = true;
                     console.log("Float error");
+                    i++;
                     flag = 1;
                   }
                 }
@@ -80,6 +82,7 @@ export default function inputValue(
                     output.output = INPUT_INVALID;
                     output.status = true;
                     console.log("Char error");
+                    i++;
                     flag = 1;
                   }
                 }
@@ -93,6 +96,7 @@ export default function inputValue(
                     output.output = INPUT_INVALID;
                     output.status = true;
                     console.log("Bool error");
+                    i++;
                     flag = 1;
                   }
                 }
