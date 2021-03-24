@@ -25,3 +25,5 @@ export const MISS_STOP_ERROR = 'Missing STOP statement.';
 export const UNEXP_LINE_ERROR = 'Unexpected line statement after STOP.';
 
 export const VAR_NOT_INIT = `Variable ':token' not initialized.`;
+
+export const INPUT_INVALID = `The input provided does not match to its data type.`;

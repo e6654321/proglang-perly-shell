@@ -11,4 +11,4 @@ export const operatorRegEx = new RegExp(/^(\+|\-|\*|\/|\=|>|<|>\=|<=|%|\=\=|<>|\
 
 export const specialRegEx = new RegExp(/^(&|,|'|")$/);
 
-export const inputRegEx = new RegExp(/^\w*$/);
+export const inputRegEx = new RegExp(/^\w*$|./);
