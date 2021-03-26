@@ -60,8 +60,7 @@ export default function HomePage () {
     setIsError(false);
     const hasInput = !!Number(localStorage.getItem('hasInput'));
     const inputLine = Number(localStorage.getItem('inputLine'));
-    const hasLoop = !!Number(localStorage.getItem('whileFlag'));
-    let codeToExecute = code.split('\n').slice(inputLine-1);
+    let codeToExecute = code.split('\n').slice(inputLine);
 
     if (hasInput) {
       setIsRunning(true);
@@ -69,11 +68,6 @@ export default function HomePage () {
       localStorage.setItem('input','');
 
       consoleOutput.output = '';
-    }
-
-    if (hasLoop) {
-      const loopLine = Number(localStorage.getItem('whileLine'));
-      codeToExecute = code.split('\n').slice(loopLine-1);
     }
 
     const terminal = Interpreter.executeProgram(
@@ -102,7 +96,7 @@ export default function HomePage () {
     
     const newInputLine = Number(localStorage.getItem('inputLine'));
 
-    if (isLoop && hasInput && newInputLine === 0) {
+    if (hasInput && newInputLine === 0) {
       setIsRunning(false);
     }
   }

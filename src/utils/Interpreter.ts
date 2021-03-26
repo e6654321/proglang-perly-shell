@@ -32,8 +32,6 @@ export function executeProgram (
       parsedStatement = LexicalAnalyzer.parseStatement(line);
     }
 
-    console.log(variables);
-
     if (parsedStatement.error !== '') {
       output.output = parsedStatement.error.replace(/:lineNumber/, lineNumber.toString());
       output.status = true;
@@ -100,7 +98,7 @@ export function runStatement(
     const statementType = statement[0].type;
     const newStatement = statement.slice(1);
     const firstWord = statement[0].value;
-  
+
     switch (statementType) {
       case (constantTypes.DECLARATION) :
         output = Declare(newStatement);
