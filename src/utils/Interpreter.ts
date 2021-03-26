@@ -95,7 +95,7 @@ export function runStatement(
   
 
   const flag = Number(localStorage.getItem('blockFlag'));
-  const skip = !!(localStorage.getItem('skip'));
+  const skip = !!(localStorage.getItem('skip'));console.log(skip)
   if (statement.length > 0) {
     const statementType = statement[0].type;
     const newStatement = statement.slice(1);
@@ -103,7 +103,7 @@ export function runStatement(
   
     switch (statementType) {
       case (constantTypes.DECLARATION):
-      if(flag===1 || (flag!=4 && !skip)){
+      if(flag===1){
           output={
             output: "Error on :lineNumber",
             status: true,
@@ -116,7 +116,7 @@ export function runStatement(
         output = checkCompleteBlock(firstWord);
         break;
       case (constantTypes.IO) :
-        if (skip || (flag!=4 && !skip)) {
+        if (skip) {
           if(statement[0].value === "OUTPUT:"){
             output = Output(newStatement, consoleOutput);
           } else {
@@ -125,12 +125,12 @@ export function runStatement(
         }
         break;
       case (constantTypes.VAR):
-        if(skip || (flag!=4 && !skip)){
+        if(skip){
           output = Evaluate(statement);
         }
         break;
       case (constantTypes.CONTROL) :
-        if(skip || (flag!=4 && !skip)){
+        if(skip){
           if(statement[0].value === "WHILE"){
             output = executeWhile(newStatement);
           } else {

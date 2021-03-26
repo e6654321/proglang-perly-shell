@@ -101,8 +101,8 @@ export function executeIf(statement: ActualValue[]) {
 
   try {
     const statementValue = Boolean(getValue(exp));   
-    localStorage.setItem('blockFlag', '4'); 
-    if (statementValue === true){
+    localStorage.setItem('blockFlag', '4');
+    if (statementValue){
       localStorage.setItem('skip', '1');
     } else {
       localStorage.setItem('skip', '0');
