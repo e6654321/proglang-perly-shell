@@ -52,7 +52,7 @@ export function Evaluate(
         output.output = EXPRESSION_DUP_EQ_ERROR;
         output.status = true;
       }
-    } else if (token.type === constantTypes.OPERATOR) {
+    } else if (token.type === constantTypes.OPERATOR || token.type === constantTypes.BOOL) {
       if (!isLeftDone) {
         output.output = EXPRESSION_ERROR;
         output.status = true;
@@ -69,6 +69,12 @@ export function Evaluate(
             break;
           case 'NOT':
             expression += ' !';
+            break;
+          case '"TRUE"':
+            expression += 'true';
+            break;
+          case '"FALSE"':
+            expression += 'false';
             break;
           default:
             expression += token.value;
