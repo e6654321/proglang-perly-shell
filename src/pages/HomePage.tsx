@@ -33,6 +33,7 @@ export default function HomePage () {
 
   useEffect(() => {
     localStorage.setItem('whileFlag', '0');
+    localStorage.setItem('skip', '0');
     localStorage.setItem('loopCount', '0');
     localStorage.setItem('whileLine', '0');
     localStorage.setItem('hasInput', '1');
@@ -124,6 +125,7 @@ export default function HomePage () {
       <StyledRow className="mr-0 ml-0">
         <Header isRunning={isRunning} onRun={() => {
           localStorage.setItem('whileFlag', '0');
+          localStorage.setItem('skip', '0');
           localStorage.setItem('loopCount', '0');
           localStorage.setItem('whileLine', '0');
           localStorage.setItem('hasInput', '1');

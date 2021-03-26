@@ -71,8 +71,6 @@ export function getType(token: string) {
     type = DATATYPE;
   } else if (stream.INPUT === token || stream.OUTPUT === token) {
     type = IO;
-  } else if (varRegEx.test(token)) {
-    type = VAR;
   } else if (operatorRegEx.test(token)) {
     type = OPERATOR;
   } else if (specialRegEx.test(token)) {
@@ -83,7 +81,9 @@ export function getType(token: string) {
     type = CHAR;
   } else if (floatRegEx.test(token)) {
     type = FLOAT;
-  }//console.log(token,type);
+  } else if (varRegEx.test(token)) {
+    type = VAR;
+  } //console.log(token,type);
 
   return type;
 }

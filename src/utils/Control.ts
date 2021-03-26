@@ -68,3 +68,49 @@ export function executeWhile(statement: ActualValue[]) {
 
     return output;
 }
+
+export function executeIf(statement: ActualValue[]) {
+  let output : ExecuteOutput = {
+    output: '',
+    status: false,
+  };
+  const skip = !!(localStorage.getItem('skip'));
+  const variables: Variable[] = JSON.parse(localStorage.getItem('variables') || '[]');
+
+  const exp = statement.map((s)=>{
+    let val = s.value;
+
+    if (s.type === constantTypes.VAR){
+      const thisVar = variables.find((value)=>value.identifier===val);
+      if(thisVar) {
+        val = thisVar.value?.toString() || '';
+      } else {
+        output = {
+          output: NO_VAR_ERROR.replace(/:token/, val),
+          status: true,
+        }
+      }
+    }
+
+    return val;
+  }).join(' ');
+
+  if(output.output){
+    return output;
+  }
+
+  try {
+    const statementValue = Boolean(getValue(exp));   
+    localStorage.setItem('blockFlag', '4'); 
+    if (statementValue === true){
+      localStorage.setItem('skip', '1');
+    } else {
+      localStorage.setItem('skip', '0');
+    }
+  } catch(error){
+    output.output = error.message.toString()+' on line :lineNumber';
+    output.status = true;
+  }
+
+  return output;
+}

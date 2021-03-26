@@ -4,6 +4,7 @@ import { APPND_NULL_ERROR } from '../constants/errors';
 import { dataType } from '../constants/reservedWords';
 import { ActualValue, ExecuteOutput } from '../types/Output.type';
 import { Variable } from '../types/Variable.type';
+import { getValue } from './EvaluateExpressions';
 
 export default function Output(
     statement: ActualValue[],
@@ -19,7 +20,7 @@ export default function Output(
     let flagNegative = false;
     let temp,cleanedChar,actualOutput;
     let varString = ''
-    statement.forEach((token) => {
+    statement.forEach((token) => {console.log(token)
       if (output.status) {
         return;
       }
