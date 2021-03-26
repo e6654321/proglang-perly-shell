@@ -47,7 +47,7 @@ export function executeProgram (
         } else if (output.output === 'WHILE') {
           localStorage.setItem('whileLine', lineNumber.toString());
         } else {
-          output.output = output.output.replace(/:lineNumber/, lineNumber.toString());
+          output.output = output.output.replace(/:lineNumber/, (lineNumber+1).toString());
         }
         return;
       }
@@ -98,7 +98,7 @@ export function runStatement(
     const statementType = statement[0].type;
     const newStatement = statement.slice(1);
     const firstWord = statement[0].value;
-
+  
     switch (statementType) {
       case (constantTypes.DECLARATION) :
         output = Declare(newStatement);
@@ -118,7 +118,7 @@ export function runStatement(
         break;
       case (constantTypes.CONTROL) :
         if(statement[0].value === "WHILE"){
-          executeWhile(newStatement);
+          // output = executeWhile(newStatement);
         }
         break;
       default:

@@ -113,7 +113,9 @@ export function Evaluate(
 
 export function getValue(expression: string): string {
   // eslint-disable-next-line no-eval
-  return eval(expression);
+  const newExp = expression.replace(/<>/,'!=');
+
+  return eval(newExp);
 }
 
 export function setValue(variable: Variable, value: string) {

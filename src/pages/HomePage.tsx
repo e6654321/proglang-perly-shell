@@ -14,7 +14,7 @@ import { couldStartTrivia } from 'typescript';
 export default function HomePage () {
   const [code, setCode] = useState<string>('');
   const [isError, setIsError] = useState<Boolean>(false);
-  const [isLoop, setIsLoop] = useState<Boolean>(false);
+  const [isLoop, setIsLoop] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<Boolean>(false);
   const { consoleOutput, isInput, setInput, setIsInput, setOutput } = useContext(ConsoleContext);
   let variables: Variable[] = [];
@@ -59,7 +59,8 @@ export default function HomePage () {
   async function onRun() {
     setIsError(false);
     const hasInput = !!Number(localStorage.getItem('hasInput'));
-    const inputLine = Number(localStorage.getItem('inputLine'));
+    const hasLoop = !!Number(localStorage.getItem('whileFlag'));
+    let inputLine = Number(localStorage.getItem('inputLine'));
     let codeToExecute = code.split('\n').slice(inputLine);
 
     if (hasInput) {
@@ -68,6 +69,11 @@ export default function HomePage () {
       localStorage.setItem('input','');
 
       consoleOutput.output = '';
+    }
+
+    if (hasLoop) {
+      inputLine = Number(localStorage.getItem('whileLine'));
+      codeToExecute = code.split('\n').slice(inputLine);
     }
 
     const terminal = Interpreter.executeProgram(
@@ -80,8 +86,10 @@ export default function HomePage () {
       setIsInput(true);
       setInput('');
     } else if (terminal.output === 'WHILE') {
-      setIsLoop(true);
+      const inputLine = Number(localStorage.getItem('loopCount'));
+      setIsLoop(inputLine);
     } else {
+      setIsLoop(0);
       setIsError(terminal.status);
       if (terminal.status) {
         localStorage.setItem('variables',JSON.stringify([]));
@@ -96,7 +104,7 @@ export default function HomePage () {
     
     const newInputLine = Number(localStorage.getItem('inputLine'));
 
-    if (hasInput && newInputLine === 0) {
+    if (!isLoop && hasInput && newInputLine === 0) {
       setIsRunning(false);
     }
   }

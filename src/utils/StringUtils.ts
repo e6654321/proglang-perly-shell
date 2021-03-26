@@ -23,10 +23,9 @@ export function tokenize(value: string) {
     .replace(/>/g, " > ")
     .replace(/\(/g, " ( ")
     .replace(/\)/g, " ) ")
-    .replace(/= =/g, "==")
-    .replace(/< =/g, "<=")
-    .replace(/> =/g, ">=")
+    .replace(/=  =/g, "==")
+    .replace(/<  =/g, "<=")
+    .replace(/>  =/g, ">=")
     .replace(/<  >/g, " <> ")
-    .replace(/= =/g, " == ")
     .split(/[\s]+/);
 }
